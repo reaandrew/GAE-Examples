@@ -1,0 +1,32 @@
+{% extends "shared/main_master.html" %}
+{% block title %}Enquiry{% endblock %}
+
+{% block content %}
+<h1>Enquiry Form</h1>
+	<form method="POST" action="/enquiry_submit/" >
+		{{ enquiryform.non_field_errors }}
+		<p>
+			{{ enquiryform.name.errors }}	
+			<label>Name</label>
+			{{ enquiryform.name }}
+		</p>
+		<p>
+			{{ enquiryform.email.errors }}
+			<label>Email</label>
+			{{ enquiryform.email }}
+		</p>
+		<p>
+			{{ enquiryform.telephone.errors }}
+			<label>Telephone</label>
+			{{ enquiryform.telephone }}
+		</p>
+		<p>
+			{{ enquiryform.enquiry.errors }}
+			<label>Enquiry</label>
+			{{ enquiryform.enquiry }}
+		</p>
+		<p>
+			<input type="submit" value="Submit" />
+		</p>
+	</form>
+{% endblock %}
