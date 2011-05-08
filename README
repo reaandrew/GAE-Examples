@@ -1,0 +1,21 @@
+Google App Engine Examples - Using the Django Framework
+
+Author : Andrew Rea
+
+
+I am writing these examples as I get familiar with working with the Google App Engine in python.  I thought it would be very handy to have these on github for future reference.  Hopefully it might be of interest or use to others.
+
+
+[ Simple Contact Form ]
+
+This is example simply adds a contact form to the page and saves the post data as an enquiry.
+
+[ Simple Contact Form using the Google App Engine Task Queue ]
+
+This is similar to the first example, only the processing of of the post data is off set to the task handler
+
+
+
+
+
+
