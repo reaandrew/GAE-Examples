@@ -4,6 +4,10 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /tasks/.+
+  script: main.py
+  login: admin
+
 - url: /favicon.ico
   static_files: media/img/favicon.ico
   upload: media/img/favicon.ico
