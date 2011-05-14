@@ -10,12 +10,12 @@ class Forum(BaseModel):
 
 class Thread(BaseModel):
 	title = db.StringProperty()
-	content = db.StringProperty()
+	content = db.StringProperty(multiline=True)
 	user = db.UserProperty()
 	forum = db.ReferenceProperty(Forum)
 
 class Post(BaseModel):
-	content = db.StringProperty()
+	content = db.StringProperty(multiline=True)
 	user = db.UserProperty()
 	thread = db.ReferenceProperty(Thread)
 

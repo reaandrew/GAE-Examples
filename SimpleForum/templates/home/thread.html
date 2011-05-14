@@ -1,0 +1,22 @@
+{% extends "shared/main_master.html" %}
+
+{% block  title %}{{thread.title}}{% endblock %}
+
+{% block  content %}
+<h2>{{thread.title}}</h2>
+<p>{{thread.content}}</p>
+<hr/>
+{% for post in posts %}
+<p>{{post.content}}</p>
+{% endfor %}
+{% if not posts %}
+<p> No Posts </p>
+{% endif %}
+
+
+<form action="/thread/{{thread.key.id}}/createpostsubmit/" method="post">
+{{ post_form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

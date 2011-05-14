@@ -9,7 +9,8 @@
 <p>This will be some text about the application</p>
 <h2>Current Forums</h2>
 {% for forum in forums %}
-	<p><strong>{{ forum.name }}</strong></p>
+	<p><strong><a href="/forum/{{forum.key.id}}">{{ forum.name }}</a></strong></p>
+	<p>{{ forum.user.nickname }}</p>
 {% endfor %}
 {% if not forums %}
 	<p>No Forums</p>

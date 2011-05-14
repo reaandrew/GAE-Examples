@@ -4,8 +4,10 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from google.appengine.api import users
 
-from models import Forum
-from forms import ForumForm
+from models import Forum,Thread,Post
+from forms import ForumForm,ThreadForm, PostForm
+
+from decorators import needs_login
 
 class OpenIdUrl:
 	def __init__(self, name, url):
@@ -28,6 +30,7 @@ def index(request):
 		'logged_in' : users.get_current_user() is None
 	})
 
+@needs_login
 @require_http_methods(["GET"])
 def create_forum(request):
 	return render_to_response('home/create_forum.html',
@@ -36,27 +39,46 @@ def create_forum(request):
 	})
 
 
-'''
 @require_http_methods(["GET"])
 def forum(request, forumid):
-	return render_to_response('home/forum.html')
+	forum = Forum.get_by_id(int(forumid))
+	threads = Thread.all().filter('forum =',forum).order('-datetime').fetch(20)
+	return render_to_response('home/forum.html',
+	{
+		'forum' : forum,
+		'threads' : threads
+	})
 
 @require_http_methods(["GET"])
 def thread(request, threadid):
-	return render_to_response('home/thread.html')
+	thread = Thread.get_by_id(int(threadid))
+	posts = Post.all().filter('thread =', thread).order('datetime')
+	
+	return render_to_response('home/thread.html',
+	{
+		'forum' : thread.forum,
+		'thread' : thread,
+		'posts' : posts,
+		'post_form' : PostForm()
+	})
 
 @require_http_methods(["GET"])
 def create_thread(request, forumid):
-	return render_to_response('home/create_thread.html')
-'''
+	forum = Forum.get_by_id(int(forumid))
+	return render_to_response('home/create_thread.html',
+	{
+		'forum' : forum,
+		'thread_form' : ThreadForm()
+	})
 
+@needs_login
 @require_http_methods(["POST"])
 def create_forum_submit(request):
 	data = ForumForm(request.POST)
 
 	if data.is_valid():
 		entity = data.save(commit=False)
-		entity.user = users.get_current_user()
+		entity.user = request._user
 		entity.put()
 		return HttpResponseRedirect('/')
 	
@@ -64,15 +86,46 @@ def create_forum_submit(request):
 	{
 		'forum_form' : data
 	})
-'''
+
+@needs_login
 @require_http_methods(["POST"])
 def create_thread_submit(request, forumid):
-	return HttpResponseRedirect('/forum/1')
+	forum = Forum.get_by_id(int(forumid))
+	data = ThreadForm(request.POST)
+	if data.is_valid():
+		entity = data.save(commit=False)
+		entity.forum = forum
+		entity.user = request._user
+		entity.put()
+		return HttpResponseRedirect('/forum/{0}'.format(forum.key().id()))
 
+	return render_to_response('home/create_thread.html',
+	{
+		'thread_form' : data
+	})
+
+@needs_login
 @require_http_methods(["POST"])
 def create_post_submit(request, threadid):
-	return HttpResponseRedirect('/thread/1')
+	thread = Thread.get_by_id(int(threadid))
+	data = PostForm(request.POST)
 
+	if data.is_valid():
+		entity = data.save(commit=False)
+		entity.thread = thread
+		entity.user = request._user
+		entity.put()
+		return HttpResponseRedirect('/thread/{0}'.format(thread.key().id()))
+	
+	posts = Post.all().filter('thread =', thread).order('datetime')
+	return render_to_response('home/thread.html',{
+		'forum' : thread.forum,
+		'thread' : thread,
+		'posts' : posts,
+		'post_form' : data
+	})
+
+'''
 @require_http_methods(["POST"])
 def create_forum_handler(request):
 	return HttpResponseRedirect('/forums/')
@@ -85,28 +138,4 @@ def create_thread_handler(request):
 def create_post_handler(request):
 	return HttpResponseRedirect('/thread/1')
 
-@require_http_methods(["GET"])
-def enquiry(request):
-	return render_to_response('home/enquiry.html',
-	{
-		'enquiryform' : EnquiryForm()
-	})
-
-@require_http_methods(["GET"])
-def enquiry_thanks(request):
-	return render_to_response('home/enquiry_thanks.html')
-
-@require_http_methods(["POST"])
-def enquiry_submit(request):
-	data  = EnquiryForm(request.POST)
-	
-	if data.is_valid():
-		entity = data.save(commit=False)
-		entity.put()
-		return HttpResponseRedirect('/enquiry_thanks/')
-	
-	return render_to_response('home/enquiry.html',
-	{
-		'enquiryform' : form
-	})
 '''

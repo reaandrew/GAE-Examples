@@ -1,0 +1,14 @@
+{% extends "shared/main_master.html" %}
+
+{% block  title %}{{forum.title}}{% endblock %}
+
+{% block  content %}
+<h2>{{ forum.name }}</h2>
+<p><a href="/forum/{{forum.key.id}}/createthread">Create Thread</a></p>
+{% for thread in threads %}
+<p><a href="/thread/{{thread.key.id}}">{{thread.title}}</a></p>
+{% endfor %}
+{% if not threads %}
+<p>No Threads</p>
+{% endif %}
+{% endblock %}

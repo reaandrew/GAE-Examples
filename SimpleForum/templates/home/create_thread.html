@@ -1,0 +1,10 @@
+{% extends "shared/main_master.html" %}
+{% block  title %}Create Thread{% endblock %}
+
+{% block  content %}
+
+<form action="/forum/{{forum.key.id}}/createthreadsubmit/" method="post">
+{{ thread_form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

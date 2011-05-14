@@ -10,10 +10,10 @@ class ForumForm(djangoforms.ModelForm):
 class ThreadForm(djangoforms.ModelForm):
 	class Meta:
 		model = Thread
-		exclude = ['user']
+		exclude = ['user','forum']
 
 class PostForm(djangoforms.ModelForm):
 	class Meta:
 		model = Post
-		exclude = ['user']
+		exclude = ['user','thread']
 
