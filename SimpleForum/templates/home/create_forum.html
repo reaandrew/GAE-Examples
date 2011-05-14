@@ -1,0 +1,9 @@
+{% extends "shared/main_master.html" %}
+{% block  title %}Create Forum{% endblock %}
+
+{% block  content %}
+<form action="/forum/createsubmit/" method="post">
+{{ forum_form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

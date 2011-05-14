@@ -1,0 +1,24 @@
+{% extends "shared/main_master.html" %}
+
+{% block  title %}Index{% endblock %}
+{% block  css_includes %}{% endblock %}
+{% block  script_includes %}{% endblock %}
+
+{% block content %}
+<h1>Welcome to the application</h1>
+<p>This will be some text about the application</p>
+<h2>Current Forums</h2>
+{% for forum in forums %}
+	<p><strong>{{ forum.name }}</strong></p>
+{% endfor %}
+{% if not forums %}
+	<p>No Forums</p>
+{%endif%}
+{% if logged_in %}
+{% for url in urls %}
+<a href="{{url}}">{{url}}</a>
+{% endfor %}
+{% endif %}
+{%endblock%}
+
+{% block  footer %}Footer Here{% endblock %}

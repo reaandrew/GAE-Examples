@@ -1,0 +1,2 @@
+#Nice tip
+rendered = render_to_string('my_template.html', { 'foo': 'bar' })
