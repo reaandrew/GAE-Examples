@@ -5,17 +5,17 @@ class BaseModel(db.Model):
 	datetime = db.DateTimeProperty(auto_now_add=True) 
 
 class Forum(BaseModel):
-	name = db.StringProperty()
-	user = db.UserProperty()
+	name = db.StringProperty(required=True)
+	user = db.UserProperty(required=True)
 
 class Thread(BaseModel):
-	title = db.StringProperty()
-	content = db.StringProperty(multiline=True)
-	user = db.UserProperty()
-	forum = db.ReferenceProperty(Forum)
+	title = db.StringProperty(required=True)
+	content = db.StringProperty(multiline=True,required=True)
+	user = db.UserProperty(required=True)
+	forum = db.ReferenceProperty(Forum, required=True)
 
 class Post(BaseModel):
-	content = db.StringProperty(multiline=True)
+	content = db.StringProperty(multiline=True,required=True)
 	user = db.UserProperty()
 	thread = db.ReferenceProperty(Thread)
 

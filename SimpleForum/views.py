@@ -77,8 +77,8 @@ def create_forum_submit(request):
 	data = ForumForm(request.POST)
 
 	if data.is_valid():
-		entity = data.save(commit=False)
 		entity.user = request._user
+		entity = data.save(commit=False)
 		entity.put()
 		return HttpResponseRedirect('/')
 	
@@ -93,9 +93,9 @@ def create_thread_submit(request, forumid):
 	forum = Forum.get_by_id(int(forumid))
 	data = ThreadForm(request.POST)
 	if data.is_valid():
-		entity = data.save(commit=False)
 		entity.forum = forum
 		entity.user = request._user
+		entity = data.save(commit=False)
 		entity.put()
 		return HttpResponseRedirect('/forum/{0}'.format(forum.key().id()))
 
@@ -108,12 +108,14 @@ def create_thread_submit(request, forumid):
 @require_http_methods(["POST"])
 def create_post_submit(request, threadid):
 	thread = Thread.get_by_id(int(threadid))
-	data = PostForm(request.POST)
+	#I have to add some value that is not null or empty to content
+	#to get round what seems to be a bug with either Django forms or Django
+	#forms with the google app engine
+	post = Post(user=request._user, thread=thread, content="CONTENT")
+	data = PostForm(data=request.POST, instance=post) 
 
 	if data.is_valid():
 		entity = data.save(commit=False)
-		entity.thread = thread
-		entity.user = request._user
 		entity.put()
 		return HttpResponseRedirect('/thread/{0}'.format(thread.key().id()))
 	
