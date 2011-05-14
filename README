@@ -18,6 +18,7 @@ This is similar to the first example, only the processing of of the post data is
 
 This is a simple forum, as the name suggests to achieve core functionality that a forum should have.  In this example I will also be looking at authentication, and querying with the Google App Engine Data Store.  The authentication provider I will be using for this will be the Google App Engine OpenID support.  There is a subtle difference to what you will see when on the GAE Cloud as you do when you are developing.
 
+I am looking at investigating a scaling best practice called counter sharding, along with transaction try-fail-retry.  
 
 
 
