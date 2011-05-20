@@ -14,6 +14,10 @@ urlpatterns = patterns('',
 	(r'^forum/(?P<forumid>\d+)/createthread/$', 'views.create_thread'),
 	(r'^forum/(?P<forumid>\d+)/createthreadsubmit/$', 'views.create_thread_submit'),
 	(r'^thread/(?P<threadid>\d+)/createpostsubmit/$', 'views.create_post_submit'),
+	(r'^category/create/$', 'views.create_category'),
+	(r'^category/createsubmit/$', 'views.create_category_submit'),
+	
+	
 	
 	
     # url(r'^forum/', include('forum.foo.urls')),

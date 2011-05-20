@@ -1,2 +1,6 @@
 #Nice tip
 rendered = render_to_string('my_template.html', { 'foo': 'bar' })
+
+#Nice tip
+start and clear:
+dev_appserver . --use_sqlite --clear_datastore

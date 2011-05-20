@@ -1,0 +1,12 @@
+{% extends "shared/main_master.html" %}
+
+{% block  title %}
+Create Category
+{% endblock %}
+
+{% block  content %}
+<form action="/category/createsubmit/" method="post">
+{{ category_form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

@@ -8,13 +8,23 @@
 <h1>Welcome to the application</h1>
 <p>This will be some text about the application</p>
 <h2>Current Forums</h2>
-{% for forum in forums %}
-	<p><strong><a href="/forum/{{forum.key.id}}">{{ forum.name }}</a></strong></p>
-	<p>{{ forum.user.nickname }}</p>
+<ul>
+{% for category in viewmodel.categories %}
+	<li>{{category.category.name}}
+		<ul>
+		{% for forumviewmodel in category.forums %}
+			<li><a href="/forum/{{forumviewmodel.model.key.id}}/">{{forumviewmodel.model.name}}</a>
+				<ul>
+					<li>{{ forumviewmodel.lastthread.title }}</li>
+					<li>{{ forumviewmodel.threadcount }}</li>
+					<li>{{ forumviewmodel.lastthread.user.nickname}}</li>
+				</ul>
+			</li>
+		{% endfor %}
+		</ul>
+	</li>
 {% endfor %}
-{% if not forums %}
-	<p>No Forums</p>
-{%endif%}
+</ul>
 {% if logged_in %}
 {% for url in urls %}
 <a href="{{url}}">{{url}}</a>

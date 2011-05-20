@@ -10,6 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Forum
+  properties:
+  - name: category
+  - name: datetime
+    direction: desc
+
 - kind: Post
   properties:
   - name: thread
