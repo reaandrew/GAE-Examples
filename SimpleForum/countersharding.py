@@ -44,7 +44,7 @@ def increment(name):
             counter = GeneralCounterShard(key_name=shard_name, name=name)
         counter.count += 1
         counter.put()
-    db.run_in_transaction(txn)
+    db.run_in_transaction_custom_retries(100,txn)
     memcache.incr(name, initial_value=0)
 
 

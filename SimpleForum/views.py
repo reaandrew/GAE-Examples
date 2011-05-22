@@ -1,15 +1,19 @@
+from google.appengine.api import taskqueue 
+from google.appengine.api.users import User
 from google.appengine.ext import db
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from google.appengine.api import users
 
 from models import Forum,Thread,Post, Category
 from forms import ForumForm,ThreadForm, PostForm, CategoryForm
-from viewmodels import ForumCategoriesViewModel
+from viewmodels import ForumCategoriesViewModel, ThreadsViewModel, ThreadPostsViewModel, ThreadViewModel
 
 from decorators import needs_login
+
+import logging
 
 class OpenIdUrl:
 	def __init__(self, name, url):
@@ -44,26 +48,26 @@ def create_forum(request):
 @require_http_methods(["GET"])
 def forum(request, forumid):
 	forum = Forum.get_by_id(int(forumid))
-	threads = Thread.all().filter('forum =',forum).order('-datetime').fetch(20)
 	return render_to_response('home/forum.html',
 	{
 		'forum' : forum,
-		'threads' : threads
+		'threadsviewmodel' : ThreadsViewModel(forum)
 	})
 
 @require_http_methods(["GET"])
 def thread(request, threadid):
 	thread = Thread.get_by_id(int(threadid))
-	posts = Post.all().filter('thread =', thread).order('datetime')
+	posts = ThreadPostsViewModel(thread)
 	
 	return render_to_response('home/thread.html',
 	{
 		'forum' : thread.forum,
-		'thread' : thread,
+		'thread' : ThreadViewModel(thread),
 		'posts' : posts,
 		'post_form' : PostForm()
 	})
 
+@needs_login
 @require_http_methods(["GET"])
 def create_thread(request, forumid):
 	forum = Forum.get_by_id(int(forumid))
@@ -122,9 +126,12 @@ def create_post_submit(request, threadid):
 	data = PostForm(data=request.POST, instance=post) 
 
 	if data.is_valid():
-		entity = data.save(commit=False)
-		entity.put()
-		return HttpResponseRedirect('/thread/{0}'.format(thread.key().id()))
+		for n in range(10):
+			dataToSend = dict(request.POST)
+			dataToSend['userid'] = request._user.user_id()
+			dataToSend['threadid'] = thread.key().id()
+			taskqueue.add(url='/tasks/insertpost/', params=dataToSend)	
+		return HttpResponseRedirect('/thread/{0}/'.format(threadid))
 	
 	posts = Post.all().filter('thread =', thread).order('datetime')
 	return render_to_response('home/thread.html',{
@@ -134,8 +141,30 @@ def create_post_submit(request, threadid):
 		'post_form' : data
 	})
 
+@require_http_methods(["POST"])
+def create_post_submit_process(request):
+	try:
+		logging.info("User Id {0}".format(request.POST['userid']))
+		thread = Thread.get_by_id(int(request.POST['threadid']))
+		user = User(request.POST['userid'])
+		#I have to add some value that is not null or empty to content
+		#to get round what seems to be a bug with either Django forms or Django
+		#forms with the google app engine
+		post = Post(user=user, thread=thread, content="CONTENT")
+		data = PostForm(data=request.POST, instance=post) 
 
-	
+		if data.is_valid():
+			entity = data.save(commit=False)
+			entity.put()
+			thread.forum.increment_post_count()
+			thread.set_last_post(entity)
+			thread.increment_post_count()
+		else:
+			logging.info("data not valid")
+	except Exception, e:
+		logging.info(e.message)
+	return HttpResponse()
+
 @needs_login
 @require_http_methods(["GET"])
 def create_category(request):

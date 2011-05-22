@@ -21,6 +21,12 @@ indexes:
   - name: thread
   - name: datetime
 
+- kind: Post
+  properties:
+  - name: thread
+  - name: datetime
+    direction: desc
+
 - kind: Thread
   properties:
   - name: forum

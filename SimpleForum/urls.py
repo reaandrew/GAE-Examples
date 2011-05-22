@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 	(r'^thread/(?P<threadid>\d+)/createpostsubmit/$', 'views.create_post_submit'),
 	(r'^category/create/$', 'views.create_category'),
 	(r'^category/createsubmit/$', 'views.create_category_submit'),
-	
+	(r'^tasks/insertpost/$', 'views.create_post_submit_process'),
 	
 	
 	

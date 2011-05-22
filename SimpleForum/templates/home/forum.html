@@ -3,12 +3,38 @@
 {% block  title %}{{forum.title}}{% endblock %}
 
 {% block  content %}
-<h2>{{ forum.name }}</h2>
-<p><a href="/forum/{{forum.key.id}}/createthread">Create Thread</a></p>
-{% for thread in threads %}
-<p><a href="/thread/{{thread.key.id}}">{{thread.title}}</a></p>
+<div class="container_24">
+	<div class="grid_24">
+		<h2>{{ forum.name }}</h2>
+	</div>
+	<div class="clear"></div>
+	<div class="grid_24">
+		<a href="/" class="btn"><span><span><b>&nbsp;</b><u>Home</u></span></span></a>
+		<a href="/forum/{{forum.key.id}}/createthread" class="btn"><span><span><b>&nbsp;</b><u>Create Thread</u></span></span></a>
+	</div>
+	<div class="clear"></div>
+	<div class="grid_12">&nbsp;</div>
+	<div class="grid_6">User</div>
+	<div class="grid_3">Updated</div>
+	<div class="grid_3">Posts</div>
+	<div class="clear"></div>
+{% for thread in threadsviewmodel.threads %}
+	<div class="grid_12">
+		<a href="/thread/{{thread.key.id}}">{{thread.title}}</a>
+	</div>
+	<div class="grid_6">
+		<a href="#">{{thread.user.nickname}}</a>
+	</div>
+	<div class="grid_3">
+		{{thread.lastpost.datetime|date:"D d M Y"}}
+	</div>
+	<div class="grid_3">
+		{{thread.postcount}}
+	</div>
+	<div class="clear"></div>
 {% endfor %}
-{% if not threads %}
+{% if not threadsviewmodel %}
 <p>No Threads</p>
+</div>
 {% endif %}
 {% endblock %}

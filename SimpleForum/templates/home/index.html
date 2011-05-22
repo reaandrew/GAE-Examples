@@ -5,26 +5,100 @@
 {% block  script_includes %}{% endblock %}
 
 {% block content %}
-<h1>Welcome to the application</h1>
-<p>This will be some text about the application</p>
-<h2>Current Forums</h2>
-<ul>
-{% for category in viewmodel.categories %}
-	<li>{{category.category.name}}
-		<ul>
+<div class="container_24"> 
+	<h2>Simple Forum</h2>
+	<div class="grid_12">
+	
+	</div>	
+	<div class="grid_12">
+		&nbsp;
+	</div>
+	<div class="grid_8">
+		Last Post
+	</div>
+	<div class="grid_2">
+		Threads
+	</div>
+	<div class="grid_2">
+		Posts
+	</div>
+	<div class="clear"></div>
+	{% for category in viewmodel.categories %}
+		<div class="grid_24 category">
+			<p>
+				{{category.category.name}}
+			</p>
+		</div>
 		{% for forumviewmodel in category.forums %}
-			<li><a href="/forum/{{forumviewmodel.model.key.id}}/">{{forumviewmodel.model.name}}</a>
-				<ul>
-					<li>{{ forumviewmodel.lastthread.title }}</li>
-					<li>{{ forumviewmodel.threadcount }}</li>
-					<li>{{ forumviewmodel.lastthread.user.nickname}}</li>
-				</ul>
-			</li>
+			<div class="grid_12">
+				<div class="grid_12">
+					<a href="/forum/{{forumviewmodel.model.key.id}}/">
+						{{forumviewmodel.model.name}}
+					</a>
+				</div>
+				<div class="clear"></div>
+				<div class="grid_12">
+					{{forumviewmodel.model.description}}
+				</div>
+			</div>
+			<div class="grid_8">
+				<div class="grid_8">
+			<a href="/thread/{{forumviewmodel.lastthread.key.id}}/">{{ forumviewmodel.lastthread.title }}</a> by <a href="#">{{forumviewmodel.lastthread.user.nickname}}</a>
+				</div>
+				<div class="clear"></div>
+				<div class="grid_8">
+					{{forumviewmodel.lastthread.datetime|date:"D d M Y"}}
+				</div>
+			</div>
+			<div class="grid_2">
+				{{forumviewmodel.threadcount}}
+			</div>
+			<div class="grid_2">
+				{{forumviewmodel.postcount}}
+			</div>
+			<div class="clear"></div>
 		{% endfor %}
-		</ul>
-	</li>
-{% endfor %}
-</ul>
+	{% endfor %}
+ 	<div class="clear"></div> 
+	<!--
+	<table class="fulltable">
+		<tr>
+			<td>
+				<table class="fulltable">
+					<tr>
+						<th>&nbsp;</th>
+						<th class="meta">Last Post</th>
+						<th class="meta-small">Threads</th>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{% for category in viewmodel.categories %}
+		<tr>
+			<td class="category">{{category.category.name}}</td>
+		</tr>
+		<tr>
+			<td>
+			<table class="fulltable">
+			{% for forumviewmodel in category.forums %}
+				<tr>
+				<td><p><a href="/forum/{{forumviewmodel.model.key.id}}/">{{forumviewmodel.model.name}}</a></p><p class="forumdescription">{{forumviewmodel.model.description}}</p></td>
+				{% if forumviewmodel.threadcount %}
+					<td class="meta"><p><a href="/thread/{{forumviewmodel.lastthread.key.id}}/">{{ forumviewmodel.lastthread.title }}</a> by <a href="#">{{forumviewmodel.lastthread.user.nickname}}</a></p><p>{{ forumviewmodel.lastthread.datetime|date:"D d M Y" }}</p></td>
+					<td class="meta-small">{{ forumviewmodel.threadcount }}</td>
+				{% else %}
+					<td class="meta">-</td>
+					<td class="meta-small">0</td>
+				{% endif %}
+				</tr>
+			{% endfor %}
+				</table>
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+	-->
+</div>
 {% if logged_in %}
 {% for url in urls %}
 <a href="{{url}}">{{url}}</a>

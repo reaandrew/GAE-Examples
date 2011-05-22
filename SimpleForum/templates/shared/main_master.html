@@ -1,10 +1,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>{% block  title %}{% endblock %}</title>
-		<link type="text/css" href="/static/main.css" rel="stylesheet"
+		<link type="text/css" rel="stylesheet" href="/static/reset.css" /> 
+		<link type="text/css" rel="stylesheet" href="/static/text.css" /> 
+		<link type="text/css" rel="stylesheet" href="/static/960_24_col.css" /> 
+		<link type="text/css" href="/static/main.css" rel="stylesheet"/>
+		{% block  css %}{% endblock %}
+		{% block  scripts %}{% endblock %}
 	</head>
 	<body>
-		<h1>Some Application</h1>
 		{% block  content %}{% endblock %}
 	</body>
 </html>

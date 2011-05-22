@@ -2,21 +2,81 @@
 
 {% block  title %}{{thread.title}}{% endblock %}
 
+{% block  css %}
+<!-- markItUp! skin -->
+<link rel="stylesheet" type="text/css" href="/static/plugins/markitup/skins/markitup/style.css" />
+<!--  markItUp! toolbar skin -->
+<link rel="stylesheet" type="text/css" href="/static/plugins/markitup/markupsets/markdown/style.css" /> 
+
+{% endblock %}
+
+{% block  scripts %}
+<!-- jQuery -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.3.min.js"></script>
+<!-- markItUp! -->
+<script type="text/javascript" src="/static/plugins/markitup/jquery.markitup.js"></script>
+<!-- markItUp! toolbar settings -->
+<script type="text/javascript" src="/static/plugins/markitup/markupsets/markdown/set.js"></script>
+
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	// Add markItUp! to your textarea in one line
+	// $('textarea').markItUp( { Settings }, { OptionalExtraSettings } );
+	$('#markItUp').markItUp(mySettings);
+});
+-->
+</script>
+
+{% endblock %}
+
 {% block  content %}
-<h2>{{thread.title}}</h2>
-<p>{{thread.content}}</p>
-<hr/>
-{% for post in posts %}
-<p>{{post.content}}</p>
-{% endfor %}
-{% if not posts %}
-<p> No Posts </p>
-{% endif %}
-
-
-<form action="/thread/{{thread.key.id}}/createpostsubmit/" method="post">
-{{ post_form.as_p }}
-<input type="submit" value="Submit" />
-</form>
-
+<div class="container_24">
+	<div class="grid_24">
+		<h2>{{thread.title}}</h2>
+	</div>
+	<div class="clear"></div>
+	<div class="grid_2">
+		<img src="http://www.gravatar.com/avatar/{{thread.emailhash}}" />
+	</div>
+	<div class="grid_1">&nbsp;</div>
+	<div class="grid_21">
+		{{thread.content}}
+	</div>
+	<div class="clear"></div>
+	<div class="grid_24">
+		by {{thread.user.nickname}} {{thread.datetime|date:"D d M Y"}}
+	</div>
+	<div class="clear"></div>
+	{% for post in posts.posts %}
+	<div class="grid_2">
+		<img src="http://www.gravatar.com/avatar/{{post.emailhash}}" />
+	</div>
+	<div class="grid_1">
+		&nbsp;
+	</div>
+	<div class="grid_21">
+		{{post.content}}
+	</div>
+	<div class="clear"></div>
+	<div class="grid_24">
+		by {{post.displayname}} {{post.datetime|date:"D d M Y"}}
+	</div>	
+	<div class="clear"></div>
+	{% endfor %}
+	{% if not posts %}
+	<div class="grid_24">
+		No Posts
+	</div>
+	{% endif %}
+	<div class="grid_24">
+		<form action="/thread/{{thread.key.id}}/createpostsubmit/" method="post">
+		<p>
+			{{ post_form.content.errors }}
+			<textarea id="markItUp" name="content"></textarea>
+		</p>
+		<input type="submit" value="Submit" />
+		</form>
+	</div>
+</div>
 {% endblock %}
